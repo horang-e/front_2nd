@@ -17,7 +17,7 @@ const onClick = () => {outerCount += 1;}
 
 // useMemo, useCallback 등을 사용하지 않고 이 컴포넌트를 개선해보세요.
 export default function RequireRefactoring({ countRendering }: Props) {
-  return (
+  return (  
     <PureComponent
       style={style}
       onClick={onClick}
