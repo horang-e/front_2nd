@@ -142,7 +142,7 @@ export class CustomNumber {
 
 // 비 열거형 속성을 만드는 함수
 // Object.defineProperty()를 사용하여 enumerable 속성을 false로 설정
-// 얘는 언제쓰지? 왜 쓰는거지?
+// 얘는 언제쓰지? 왜 쓰는거지? : 값을 숨기고 싶을때 주로 테스트 코드 사용시 -> 의도적으로 값을 변환하거나 예측대로 흘러가게 만든다거나 할때 사용, 실제 서비스에는 사용하지않지만 복잡한데이터에서는 사용할 수 있다.
 export function createUnenumerableObject(target) {
   const result = {};
 
