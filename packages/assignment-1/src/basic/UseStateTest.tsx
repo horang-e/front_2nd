@@ -7,7 +7,7 @@ export default function UseStateTest() {
   const increment = () => {
     const newState = { ...state };
     newState.bar.count += 1;
-    setState(newState);
+    setState({ ...newState });
   };
 
   return (
