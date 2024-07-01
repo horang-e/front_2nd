@@ -22,11 +22,9 @@ export function createHooks(callback) {
 
     // setState 함수를 통해 state를 변경할 수 있도록 함
     const setState = (newState) => {
-      // state가 변경되었을 경우에만 callback을 실행
-      if (states[curIndex] === newState) return;
 
-      // 변경된 state를 전역적으로 저장
-      else {
+      // state가 변경되었을 경우에만 callback을 실행
+      if (states[curIndex] !== newState) {
         states[curIndex] = newState;
         callback();
       }

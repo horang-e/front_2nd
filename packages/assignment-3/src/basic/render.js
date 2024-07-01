@@ -2,6 +2,7 @@ export function jsx(type, props, ...children) {
   return { type, props, children: children };
 }
 
+// 가상돔을 실제 돔으로 변환
 export function createElement(node) {
   // jsx를 dom으로 변환
   // type이 문자열이라면
@@ -14,7 +15,6 @@ export function createElement(node) {
   // ex) <div></div>
   const el = document.createElement(node.type);
 
-  // console.log(el.outerHTML, 'start');
   // node.props 가 null이 아니면 
   if (node.props) {
     for (const prop in node.props) {
@@ -25,7 +25,6 @@ export function createElement(node) {
   node.children.forEach(child => {
     el.appendChild(createElement(child));
   });
-  // console.log(el.outerHTML, 'end');
 
   return el;
 }
@@ -60,7 +59,6 @@ function updateAttributes(target, newProps, oldProps) {
 }
 
 export function render(parent, newNode, oldNode, index = 0) {
-
   // 1. 만약 newNode가 없고 oldNode만 있다면
   //   parent에서 oldNode를 제거
   //   종료
@@ -74,6 +72,7 @@ export function render(parent, newNode, oldNode, index = 0) {
   if (newNode && !oldNode) {
     return parent.appendChild(createElement(newNode));
   }
+
   // 3. 만약 newNode와 oldNode 둘 다 문자열이고 서로 다르다면
   //   oldNode를 newNode로 교체
   //   종료
@@ -87,6 +86,7 @@ export function render(parent, newNode, oldNode, index = 0) {
   if (newNode.type !== oldNode.type) {
     return parent.replaceChild(createElement(newNode), parent.childNodes[index]);
   }
+
   // 5. newNode와 oldNode에 대해 updateAttributes 실행
   updateAttributes(parent.childNodes[index], newNode.props, oldNode.props);
 
