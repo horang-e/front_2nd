@@ -2,20 +2,34 @@ import { createHooks } from "./hooks";
 import { render as updateElement } from "./render";
 
 function MyReact() {
+  // 실제 DOM의 루트
   let rootElement = null;
+
+  // 랜더링 할 컴포넌트
   let rootComponent = null;
 
+  // 기존 돔 트리를 저장하는 변수
+  let oldElement = null;
+
+  // 실제 DOM트리의 생성과 업데이트를 담당하는 함수
   const _render = () => {
     resetHookContext();
     if (rootElement && rootComponent) {
       const newVdom = rootComponent();
-      updateElement(rootElement, newVdom, rootElement.firstChild);
+      updateElement(rootElement, newVdom, oldElement);
+
+      // 새로운 가상 DOM을 기존 DOM으로 변경
+      oldElement = newVdom;
     }
   };
 
+  // 사용자 직접 호출 함수 (public Api)
+  // rootElement, rootComponent 설정 및 oldElement 초기화
+  // _render 함수 호출하여 실제 랜더링 프로세스를 트리거 하는 역할을 하는 함수 
   function render($root, component) {
     rootElement = $root;
     rootComponent = component;
+    oldElement = null
     _render();
   }
 
