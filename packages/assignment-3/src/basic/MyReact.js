@@ -23,7 +23,7 @@ function MyReact() {
     }
   };
 
-  // 사용자 직접 호출 함수 (public Api)
+  // 사용자 직접 호출 함수 (public)
   // rootElement, rootComponent 설정 및 oldElement 초기화
   // _render 함수 호출하여 실제 랜더링 프로세스를 트리거 하는 역할을 하는 함수 
   function render($root, component) {
