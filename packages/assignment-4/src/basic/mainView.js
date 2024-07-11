@@ -37,7 +37,7 @@ const addToCart = () => {
 const mainEventBinding = () => {
   const addToCartButtonElement = document.querySelector('#add-to-cart');
   createEventHandler(addToCartButtonElement, {
-    'button': () => {
+    'button': (e) => {
       addToCart();
     }
   });
