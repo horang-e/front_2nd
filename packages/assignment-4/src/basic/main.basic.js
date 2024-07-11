@@ -1,6 +1,6 @@
-import basicViewRender from "./main.view";
-import cartItemsViewRender from "./cart.view";
-import totalViewRender from "./total.view";
+import basicViewRender from "./mainView";
+import cartItemsViewRender from "./cartView";
+import totalViewRender from "./totalView";
 import { initObservers } from "./global";
 
 

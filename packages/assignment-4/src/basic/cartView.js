@@ -1,7 +1,12 @@
 import { memory, createEventHandler } from "./global";
 
-
-const handleCartItems = (e, type) => {
+/**
+ * 카트 아이템을 업데이트합니다.
+ * @property {event} e
+ * @property {string} type
+ * @returns 
+ */
+const updateCartItems = (e, type) => {
   const cart = memory.getData('cart');
   if (!cart) return;
   const productId = e.target.dataset.productId;
@@ -19,11 +24,20 @@ const handleCartItems = (e, type) => {
       break;
   }
 
+  // 수량이 0인 아이템은 제거합니다.
   const filteredCart = cart.filter(({ quantity }) => quantity > 0) || [];
+
   memory.setData('cart', filteredCart);
 }
 
-
+/**
+ * 
+ * @param {*} param0 
+ * @property {string} id
+ * @property {string} name
+ * @property {number} price
+ * @returns 
+ */
 const cartItemView = ({ id, name, price, quantity }) => `<div key = ${id} id = ${id} class = 'flex justify-between items-center mb-2'>
   <span>
     ${name} - ${price}원 x ${quantity}
@@ -49,19 +63,24 @@ const cartItemView = ({ id, name, price, quantity }) => `<div key = ${id} id = $
   </div>
   `;
 
+// 이벤트 핸들러가 바인딩되었는지 여부를 저장합니다.
 let eventHandlerBound = false;
 
+
+/**
+ * 카트 아이템에 이벤트를 바인딩합니다.
+ */
 const cartEventBinding = () => {
   if (eventHandlerBound) return;
 
-  const cartItems = document.querySelector('#cart-items');
-  createEventHandler(cartItems, {
+  const cartItemElement = document.querySelector('#cart-items');
+  createEventHandler(cartItemElement, {
     '.quantity-change': (e) => {
       const change = parseInt(e.target.dataset.change);
-      handleCartItems(e, change > 0 ? 'plus' : 'minus');
+      updateCartItems(e, change > 0 ? 'plus' : 'minus');
     },
     '.remove-item': (e) => {
-      handleCartItems(e, 'remove');
+      updateCartItems(e, 'remove');
     }
   });
 
@@ -70,17 +89,16 @@ const cartEventBinding = () => {
 
 
 const cartItemsViewRender = () => {
-  const cartItems = document.querySelector('#cart-items');
+  const cartItemElement = document.querySelector('#cart-items');
   const cart = memory.getData('cart');
   if (!cart) return;
-  cartItems.innerHTML = '';
+  cartItemElement.innerHTML = '';
   cart.forEach(({ id, name, price, quantity }) => {
-    cartItems.innerHTML += cartItemView({ id, name, price, quantity });
+    cartItemElement.innerHTML += cartItemView({ id, name, price, quantity });
     if (cart.length !== 0) {
       cartEventBinding();
     }
   });
-
 }
 
 export default cartItemsViewRender;
