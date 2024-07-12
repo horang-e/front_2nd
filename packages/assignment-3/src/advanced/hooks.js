@@ -28,6 +28,7 @@ export function createHooks(callback) {
       // 결과적으로는 총 한번만 실행된다. (맨처음)
       if (!isUpdateScheduled) {
         isUpdateScheduled = true;
+        // 우선순위가 제일 낮아서 setTimeout 보다는 requestAnimationFrame을 사용하는게 좋다.
         setTimeout(processUpdates, 16.67);
       }
     };
