@@ -13,8 +13,8 @@ export const useProducts = (initialProducts: Product[]) => {
   };
 
   return {
-    products: products,
-    updateProduct: updateProduct,
-    addProduct: addProduct,
+    products,
+    updateProduct,
+    addProduct,
   };
 };

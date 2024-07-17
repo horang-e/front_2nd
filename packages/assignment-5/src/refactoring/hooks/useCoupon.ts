@@ -8,5 +8,5 @@ export const useCoupons = (initialCoupons: Coupon[]) => {
     setCoupons((prevCoupons) => [...prevCoupons, coupon]);
   };
 
-  return { coupons: coupons, addCoupon: addCoupon };
+  return { coupons, addCoupon };
 };
