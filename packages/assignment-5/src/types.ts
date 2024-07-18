@@ -22,3 +22,15 @@ export interface Coupon {
   discountType: 'amount' | 'percentage';
   discountValue: number;
 }
+
+export interface EditProductCallback {
+  (updatedProduct: Product): void;
+}
+
+export interface EditCouponCallback {
+  (updatedCoupon: Coupon): void;
+}
+
+export interface EditDiscountCallback {
+  (property: string, value: Discount[]): void;
+}
