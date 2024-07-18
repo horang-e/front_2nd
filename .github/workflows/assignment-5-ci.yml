@@ -40,5 +40,5 @@ jobs:
           cache: 'pnpm'
       - name: assignment-5-advanced
         run: |
-          pnpm install
+          pnpm -F assignment-5 install
           pnpm -F assignment-5 test:advanced
