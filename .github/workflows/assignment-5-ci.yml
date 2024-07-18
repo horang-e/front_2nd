@@ -25,7 +25,7 @@ jobs:
           cache: 'pnpm'
       - name: assignment-5-basic
         run: |
-          pnpm install
+          pnpm -F assignment-5 install
           pnpm -F assignment-5 test:basic
   advacned:
     runs-on: ubuntu-latest
