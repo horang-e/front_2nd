@@ -188,32 +188,32 @@ describe('advanced test', () => {
   </div>`);
       });
     });
-    //totalPrice, discountRate
+
     describe('CartTotal', () => {
       it('할인이 없을 때 총액만 표시해야 한다', () => {
-        const result = CartTotal({ totalPrice: 10000, discountRate: 0 });
+        const result = CartTotal({ total: 10000, discountRate: 0 });
         expect(result).toContain('총액: 10000원');
         expect(result).not.toContain('할인 적용');
       });
 
       it('할인이 적용될 때 총액과 할인율을 표시해야 한다', () => {
-        const result = CartTotal({ totalPrice: 9000, discountRate: 0.1 });
+        const result = CartTotal({ total: 9000, discountRate: 0.1 });
         expect(result).toContain('총액: 9000원');
         expect(result).toContain('10.0% 할인 적용');
       });
 
       it('할인율이 소수점 둘째 자리에서 반올림되어야 한다', () => {
-        const result = CartTotal({ totalPrice: 8750, discountRate: 0.125 });
+        const result = CartTotal({ total: 8750, discountRate: 0.125 });
         expect(result).toContain('12.5% 할인 적용');
       });
 
       it('할인율이 0%일 때 할인 정보를 표시하지 않아야 한다', () => {
-        const result = CartTotal({ totalPrice: 10000, discountRate: 0 });
+        const result = CartTotal({ total: 10000, discountRate: 0 });
         expect(result).not.toContain('할인 적용');
       });
 
       it('총액이 0원일 때도 올바르게 표시되어야 한다', () => {
-        const result = CartTotal({ totalPrice: 0, discountRate: 0 });
+        const result = CartTotal({ total: 0, discountRate: 0 });
         expect(result).toContain('총액: 0원');
         expect(result).not.toContain('할인 적용');
       });
@@ -279,9 +279,9 @@ describe('advanced test', () => {
 
       describe('상품별 할인 적용', () => {
         it.each([
-          { product: products[0], discount: products[0].discount[0][1] * 100, expected: 90000 },// [0, 10, 90000],  // 상품1
-          { product: products[1], discount: products[1].discount[0][1] * 100, expected: 170000 },// [1, 10, 170000], // 상품2
-          { product: products[2], discount: products[2].discount[0][1] * 100, expected: 240000 },// [2, 10, 240000]  // 상품3
+          { product: products[0], discount: products[0].discount[0][1]*100, expected: 90000 },// [0, 10, 90000],  // 상품1
+          { product: products[1], discount: products[1].discount[0][1]*100, expected: 170000 },// [1, 10, 170000], // 상품2
+          { product: products[2], discount: products[2].discount[0][1]*100, expected: 240000 },// [2, 10, 240000]  // 상품3
         ])('$product.name: 10개 이상 구매 시, $discount% 할인이 적용되어 $expected원이 된다.', ({ product, expected }) => {
           cart.addItem(product, 10);
           const { total } = cart.getTotal();
