@@ -660,3 +660,12 @@ describe('advanced > ', () => {
     });
   });
 });
+
+const user = [
+  {
+    user_id: 1,
+    name: 'dd',
+  },
+];
+
+user.map((user) => <div key={user.user_id}>{user.name}</div>);
