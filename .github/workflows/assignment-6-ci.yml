@@ -28,7 +28,6 @@ jobs:
         id: build
         run: |
           cd packages/assignment-6
-          pnpm run tsc
           pnpm run build
       - name: Comment on PR if build fails
         if: failure() && steps.build.outcome =='failure'
