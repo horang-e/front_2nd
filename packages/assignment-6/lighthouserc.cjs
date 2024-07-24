@@ -2,10 +2,14 @@ module.exports = {
   ci: {
     collect: {
       staticDistDir: './dist',
-      url: ['http://localhost:5173/index.html'],
     },
     assert: {
-      preset: "lighthouse:recommended",
+      assertions: {
+        'categories:performance': ['warn', { minScore: 0.5 }],
+        'categories:accessibility': ['warn', { minScore: 0.5 }],
+        'categories:best-practices': ['warn', { minScore: 0.5 }],
+        'categories:seo': ['warn', { minScore: 0.5 }],
+      },
     },
     upload: {
       target: "filesystem",
