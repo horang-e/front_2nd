@@ -164,10 +164,10 @@ jobs:
           cd packages/assignment-6
           pnpm install
           pnpm install -g @lhci/cli@0.11.x
-      - name: start server
-        run: |
-          cd packages/assignment-6
-          pnpm run start
+      # - name: start server
+      #   run: |
+      #     cd packages/assignment-6
+      #     pnpm run start
       - name: Run Lighthouse CI
         run: |
           cd packages/assignment-6
