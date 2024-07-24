@@ -22,11 +22,11 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - name: Install dependencies
-        run: pnpm -F assignment-5 install
+        run: pnpm -F assignment-6 install
       - name: Run tsc and build
         run: |
-          pnpm run tsc
-          pnpm run build
+          pnpm -F assignment-6 run tsc
+          pnpm -F assignment-6 run build
       - name: Comment on PR if build fails
         if: failure()
         uses: actions/github-script@v6
