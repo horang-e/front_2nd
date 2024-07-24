@@ -75,7 +75,7 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const fs = require('fs')
-            const eslintReport = fs.readFileSync('/packages/assignment-6/.eslintrc.cjs', 'utf8')
+            const eslintReport = fs.readFileSync('.eslintrc.cjs', 'utf8')
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
