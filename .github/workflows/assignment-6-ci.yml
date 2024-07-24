@@ -63,7 +63,7 @@ jobs:
           node-version: 20
       - name: Install dependencies
         run: |
-          pnpm -F assignment-6 ci
+          pnpm -F assignment-6 install
           pnpm install -g @lhci/cli@0.11.x
       - name: Run Lighthouse CI
         run: lhci autorun
