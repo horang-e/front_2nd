@@ -173,7 +173,6 @@ jobs:
           cd packages/assignment-6
           pnpm run lighthouse
       - name: Comment Lighthouse results on PR
-        id: lighthouse_comment
         uses: actions/github-script@v6
         with:
           github-token: ${{secrets.TOKEN_FOR_CI}}
@@ -201,17 +200,18 @@ jobs:
                 `| Category | Score |`,
                 `| --- | --- |`,
                 `| ${score(summary.performance)} Performance | ${summary.performance} |`,
-                { ... }
+              `| ${score(summary.accessibility)} Accessibility | ${summary.accessibility} |`,
+              `| ${score(summary['best-practices'])} Best Practices | ${summary['best-practices']} |`,
+              `| ${score(summary.seo)} SEO | ${summary.seo} |`,
             ].join("\n");
-            comments += comment}
-
-            core.setOutput('comments', comments)
+            comments += comment + "\n\n";
+              }
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: ${{ steps.lighthouse_comment.outputs.comments}}
+              body: comments
             })
 
   # assign_reviewer:
