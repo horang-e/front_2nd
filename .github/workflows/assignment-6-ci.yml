@@ -27,8 +27,9 @@ jobs:
       - name: Run tsc and build
         id: build
         run: |
-          pnpm -F assignment-6 run tsc
-          pnpm -F assignment-6 run build
+          cd packages/assignment-6
+          pnpm run tsc
+          pnpm run build
       - name: Comment on PR if build fails
         if: failure() && steps.build.outcome =='failure'
         uses: actions/github-script@v6
@@ -161,74 +162,57 @@ jobs:
           node-version: 20
       - name: Install dependencies
         run: |
-          pnpm -F assignment-6 install
+          cd packages/assignment-6
+          pnpm install
           pnpm install -g @lhci/cli@0.11.x
       - name: start server
-        run: pnpm -F assignment-6 start
+        run: |
+          cd packages/assignment-6
+          pnpm run start
       - name: Run Lighthouse CI
-        run: pnpm -F assignment-6 run lighthouse
+        run: |
+          cd packages/assignment-6
+          pnpm run lighthouse
       - name: Comment Lighthouse results on PR
+        id: lighthouse_comment
         uses: actions/github-script@v6
         with:
           github-token: ${{secrets.TOKEN_FOR_CI}}
           script: |
             const fs = require('fs');
-            const path = require('path');
 
-            console.log('Current working directory:', process.cwd());
-            console.log('Contents of current directory:', fs.readdirSync('.'));
+            const results = JSON.parse(fs.readFileSync("packages/assignment-6/lighthouse-results/manifest.json"));
+            let comments = "";
 
-            const lighthouseDir = path.join('/packages', 'assignment-6', 'lighthouse-results');
-            console.log('Lighthouse directory path:', lighthouseDir);
+            results.forEach((result) => {
+              const { summary, jsonPath } = result;
+              const { audits } = details;
 
-            if (!fs.existsSync(lighthouseDir)) {
-              console.log('Lighthouse results directory does not exist');
-              return;
-            }
+              const details = JSON.parse(fs.readFileSync(jsonPath));
+              const formatResult = (res) => Math.round(res * 100);
 
-            console.log('Contents of lighthouse-results directory:', fs.readdirSync(lighthouseDir));
+              Object.keys(summary).forEach(
+                (key) => (summary[key] = formatResult(summary[key]))
+              );
 
-            const jsonFiles = fs.readdirSync(lighthouseDir).filter(file => file.endsWith('.json'));
-            if (jsonFiles.length === 0) {
-              console.log('No JSON files found in lighthouse-results directory');
-              return;
-            }
+            const score = (res) => (res >= 90 ? "🟢" : res >= 50 ? "🟠" : "🔴");
 
-            const latestFile = jsonFiles.sort((a, b) => {
-              return fs.statSync(path.join(lighthouseDir, b)).mtime.getTime() - 
-                    fs.statSync(path.join(lighthouseDir, a)).mtime.getTime();
-            })[0];
+            const comment = [
+                `⚡️ Lighthouse report!`,
+                `| Category | Score |`,
+                `| --- | --- |`,
+                `| ${score(summary.performance)} Performance | ${summary.performance} |`,
+                { ... }
+            ].join("\n");
+            comments += comment}
 
-            const lighthouseReportPath = path.join(lighthouseDir, latestFile);
-            console.log('Lighthouse report path:', lighthouseReportPath);
-
-            if (!fs.existsSync(lighthouseReportPath)) {
-              console.log('Lighthouse report file does not exist');
-              return;
-            }
-
-            const lighthouseReport = fs.readFileSync(lighthouseReportPath, 'utf8');
-            const report = JSON.parse(lighthouseReport);
-
-            // 주요 메트릭을 추출합니다
-            const metrics = [
-              'first-contentful-paint',
-              'largest-contentful-paint',
-              'total-blocking-time',
-              'cumulative-layout-shift',
-            ];
-
-            let comment = '## Lighthouse CI 결과\n\n';
-            metrics.forEach(metric => {
-              const score = report.audits[metric].score * 100;
-              comment += `- ${report.audits[metric].title}: ${score.toFixed(0)}점\n`;
-            });
+            core.setOutput('comments', comments)
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: comment
+              body: ${{ steps.lighthouse_comment.outputs.comments}}
             })
 
   # assign_reviewer:
