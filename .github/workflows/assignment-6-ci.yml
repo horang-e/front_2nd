@@ -56,6 +56,11 @@ jobs:
       - name: Run eslint
         id: eslint
         run: pnpm -F assignment-6 run lint
+      - name: Run eslint
+        run: |
+          echo "::group::ESLint Output"
+          pnpm -F assignment-6 run lint
+          echo "::endgroup::"
       - name: Comment eslint report on PR
         if: failure() && steps.eslint.outcome=='failure'
         uses: actions/github-script@v6
@@ -192,7 +197,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Assign random reviewer
-        if: github.event.action == 'push'
         uses: actions/github-script@v6
         with:
           github-token: ${{secrets.TOKEN_FOR_CI}}
