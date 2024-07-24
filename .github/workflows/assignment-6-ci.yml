@@ -85,24 +85,39 @@ jobs:
             const fs = require('fs');
             const path = require('path');
 
-            //debug
             console.log('Current working directory:', process.cwd());
             console.log('Contents of current directory:', fs.readdirSync('.'));
 
-            // lighthouse-results 디렉토리에서 가장 최근의 JSON 파일을 찾습니다
             const lighthouseDir = path.join('packages', 'assignment-6', 'lighthouse-results');
+            console.log('Lighthouse directory path:', lighthouseDir);
+
             if (!fs.existsSync(lighthouseDir)) {
-             console.log('Lighthouse results directory does not exist');
-              return; 
-              }
+              console.log('Lighthouse results directory does not exist');
+              return;
+            }
+
+            console.log('Contents of lighthouse-results directory:', fs.readdirSync(lighthouseDir));
 
             const jsonFiles = fs.readdirSync(lighthouseDir).filter(file => file.endsWith('.json'));
+            if (jsonFiles.length === 0) {
+              console.log('No JSON files found in lighthouse-results directory');
+              return;
+            }
+
             const latestFile = jsonFiles.sort((a, b) => {
               return fs.statSync(path.join(lighthouseDir, b)).mtime.getTime() - 
                     fs.statSync(path.join(lighthouseDir, a)).mtime.getTime();
             })[0];
 
-            const lighthouseReport = fs.readFileSync(path.join(lighthouseDir, latestFile), 'utf8');
+            const lighthouseReportPath = path.join(lighthouseDir, latestFile);
+            console.log('Lighthouse report path:', lighthouseReportPath);
+
+            if (!fs.existsSync(lighthouseReportPath)) {
+              console.log('Lighthouse report file does not exist');
+              return;
+            }
+
+            const lighthouseReport = fs.readFileSync(lighthouseReportPath, 'utf8');
             const report = JSON.parse(lighthouseReport);
 
             // 주요 메트릭을 추출합니다
