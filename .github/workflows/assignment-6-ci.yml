@@ -54,7 +54,9 @@ jobs:
         with:
           node-version: 20
       - name: Install dependencies
-        run: pnpm -F assignment-6 install
+        run: |
+          cd packages/assignment-6
+          pnpm install
       - name: Run eslint
         id: eslint
         run: |
