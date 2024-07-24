@@ -3,7 +3,9 @@ name: CI Assignment 6
 on:
   pull_request:
     types:
+      - synchronize
       - opened
+      - reopened
     paths:
       - 'packages/assignment-6/**'
 
@@ -11,8 +13,29 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: job1 구현
-        run: echo "job1의 내용을 구현해주세요"
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run tsc and build
+        run: |
+          npm run tsc
+          npm run build
+      - name: Comment on PR if build fails
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '빌드 과정에서 오류가 발생했습니다. 로그를 확인해주세요.'
+            })
 
   lint:
     runs-on: ubuntu-latest
