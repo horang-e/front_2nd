@@ -54,9 +54,10 @@ jobs:
       - name: Install dependencies
         run: pnpm -F assignment-6 install
       - name: Run eslint
+        id: eslint
         run: pnpm -F assignment-6 run lint
       - name: Comment eslint report on PR
-        if: failure()
+        if: failure() && steps.eslint.outcome=='failure'
         uses: actions/github-script@v6
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
