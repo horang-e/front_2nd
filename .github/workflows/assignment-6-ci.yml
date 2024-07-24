@@ -60,7 +60,7 @@ jobs:
           node-version: 20
       - uses: pnpm/action-setup@v4
         with:
-          node-version: 18
+          version: latest
       - run: pnpm -F assignment-6 install && pnpm -F assignment-6 install -g @lhci/cli@0.14.x
       - run: pnpm -F assignment-6 run build
       - run: lhci -F assignment-6 autorun
