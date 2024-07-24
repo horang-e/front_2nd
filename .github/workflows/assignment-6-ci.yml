@@ -73,7 +73,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: lighthouse-report
-          path: ./lighthouse-results
+          path: ./packages/assignment-6/lighthouse-results
       - name: Comment Lighthouse results on PR
         uses: actions/github-script@v6
         with:
@@ -83,7 +83,7 @@ jobs:
             const path = require('path');
 
             // lighthouse-results 디렉토리에서 가장 최근의 JSON 파일을 찾습니다
-            const lighthouseDir = './lighthouse-results';
+            const lighthouseDir = './packages/assignment-6/lighthouse-results';
             const jsonFiles = fs.readdirSync(lighthouseDir).filter(file => file.endsWith('.json'));
             const latestFile = jsonFiles.sort((a, b) => {
               return fs.statSync(path.join(lighthouseDir, b)).mtime.getTime() - 
