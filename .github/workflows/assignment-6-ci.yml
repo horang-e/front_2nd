@@ -195,7 +195,7 @@ jobs:
         if: github.event.action == 'opened'
         uses: actions/github-script@v6
         with:
-          github-token: ${{secrets.TOKEN_FOR_CI}}
+          github-token: ${{secrets.TOKEN_FOR_CI }}
           script: |
             const teamMembers = ['AnSuebin', 'Raihyul', 'lucettin5']
             const randomReviewer = teamMembers[Math.floor(Math.random() * teamMembers.length)]
