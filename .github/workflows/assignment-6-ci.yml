@@ -92,6 +92,7 @@ jobs:
         run: |
           cd packages/assignment-6
           pnpm install
+          pnpm install -D vitest jsdom @vitest/coverage-v8
       - name: Run tests and generate coverage
         run: |
           cd packages/assignment-6
