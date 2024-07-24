@@ -69,18 +69,49 @@ jobs:
         run: pnpm -F assignment-6 run build
       - name: Run Lighthouse CI
         run: pnpm -F assignment-6 run lighthouse
+      - name: Upload Lighthouse report
+        uses: actions/upload-artifact@v3
+        with:
+          name: lighthouse-report
+          path: ./lighthouse-results
       - name: Comment Lighthouse results on PR
         uses: actions/github-script@v6
         with:
           github-token: ${{secrets.TOKEN_FOR_CI}}
           script: |
-            const fs = require('fs')
-            const lighthouseReport = fs.readFileSync('./lighthouse-report.json', 'utf8')
+            const fs = require('fs');
+            const path = require('path');
+
+            // lighthouse-results 디렉토리에서 가장 최근의 JSON 파일을 찾습니다
+            const lighthouseDir = './lighthouse-results';
+            const jsonFiles = fs.readdirSync(lighthouseDir).filter(file => file.endsWith('.json'));
+            const latestFile = jsonFiles.sort((a, b) => {
+              return fs.statSync(path.join(lighthouseDir, b)).mtime.getTime() - 
+                    fs.statSync(path.join(lighthouseDir, a)).mtime.getTime();
+            })[0];
+
+            const lighthouseReport = fs.readFileSync(path.join(lighthouseDir, latestFile), 'utf8');
+            const report = JSON.parse(lighthouseReport);
+
+            // 주요 메트릭을 추출합니다
+            const metrics = [
+              'first-contentful-paint',
+              'largest-contentful-paint',
+              'total-blocking-time',
+              'cumulative-layout-shift',
+            ];
+
+            let comment = '## Lighthouse CI 결과\n\n';
+            metrics.forEach(metric => {
+              const score = report.audits[metric].score * 100;
+              comment += `- ${report.audits[metric].title}: ${score.toFixed(0)}점\n`;
+            });
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Lighthouse CI 실행 결과:\n```json\n' + lighthouseReport + '\n```'
+              body: comment
             })
 
   assign_reviewer:
