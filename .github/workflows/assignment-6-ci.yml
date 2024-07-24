@@ -20,7 +20,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-
       - name: Install dependencies
         run: pnpm -F assignment-6 install
       - name: Run tsc and build
@@ -56,13 +55,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
       - uses: pnpm/action-setup@v4
         with:
           node-version: 18
-      - run: pnpm install && npm install -g @lhci/cli@0.14.x
-      - run: pnpm run build
-      - run: lhci autorun
+      - run: pnpm -F assignment-6 install && pnpm -F assignment-6 install -g @lhci/cli@0.14.x
+      - run: pnpm -F assignment-6 run build
+      - run: lhci -F assignment-6 autorun
 
   assign_reviewer:
     runs-on: ubuntu-latest
