@@ -2,7 +2,7 @@ module.exports = {
   ci: {
     collect: {
       staticDistDir: './dist',
-      url: ['http://localhost:3000/index.html'],
+      url: ['http://localhost:5173/index.html'],
     },
     assert: {
       preset: "lighthouse:recommended",
