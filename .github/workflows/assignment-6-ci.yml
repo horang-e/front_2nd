@@ -114,7 +114,7 @@ jobs:
             console.log('Current working directory:', process.cwd());
             console.log('Contents of current directory:', fs.readdirSync('.'));
 
-            const lighthouseDir = path.join('packages', 'assignment-6', 'lighthouse-results');
+            const lighthouseDir = path.join('/packages', 'assignment-6', 'lighthouse-results');
             console.log('Lighthouse directory path:', lighthouseDir);
 
             if (!fs.existsSync(lighthouseDir)) {
