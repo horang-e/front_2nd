@@ -41,6 +41,18 @@ jobs:
               repo: context.repo.repo,
               body: '빌드 과정에서 오류가 발생했습니다. 로그를 확인해주세요.'
             })
+      - name: Comment on PR if build succeeds
+        if: success() && steps.build.outcome == 'success'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.TOKEN_FOR_CI}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '성공적으로 빌드되었습니다!👍'
+            })
 
   lint:
     runs-on: ubuntu-latest
@@ -68,13 +80,25 @@ jobs:
         with:
           github-token: ${{secrets.TOKEN_FOR_CI}}
           script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'ESLint에서 오류가 발생했습니다. 리포트:\n```json\n' + eslintReport + '\n```'
+            })
+      - name: Comment there's not any eslint report
+        if: success() && steps.eslint.outcome == 'success'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.TOKEN_FOR_CI}}
+          script: |
             const fs = require('fs')
             const eslintReport = fs.readFileSync('packages/assignment-6/.eslintrc.cjs', 'utf8')
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'ESLint에서 오류가 발생했습니다. 리포트:\n```json\n' + eslintReport + '\n```'
+              body: 'ESLint에서 오류가 발생하지 않았습니다! 성공이에요!👍'
             })
 
   test:
@@ -123,7 +147,6 @@ jobs:
             * 브랜치 커버리지: ${{steps.coverage.outputs.branch}}%
             * 함수 커버리지: ${{steps.coverage.outputs.function}}%
             * 구문 커버리지: ${{steps.coverage.outputs.statement}}%`
-
             })
 
   lighthouse:
@@ -207,14 +230,6 @@ jobs:
               repo: context.repo.repo,
               body: comment
             })
-      - name: Upload Lighthouse report
-        uses: actions/upload-artifact@v3
-        with:
-          name: lighthouse-report
-          path: |
-            packages/assignment-6/lighthouse-results
-            .lighthouseci
-        if: always()
 
   # assign_reviewer:
   #   runs-on: ubuntu-latest
