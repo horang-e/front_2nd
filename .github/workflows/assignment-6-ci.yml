@@ -118,11 +118,12 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `커버리지 결과
-              * 라인 커버리지: ${process.env.LINE}%
-              * 브랜치 커버리지: ${process.env.BRANCH}%
-              * 함수 커버리지: ${process.env.FUNCTION}%
-              * 구문 커버리지: ${process.env.STATEMENT}%`
+              body: `## 커버리지 결과
+              * 라인 커버리지: ${{steps.coverage.outputs.line}}%
+            * 브랜치 커버리지: ${{steps.coverage.outputs.branch}}%
+            * 함수 커버리지: ${{steps.coverage.outputs.function}}%
+            * 구문 커버리지: ${{steps.coverage.outputs.statement}}%`
+
             })
 
   lighthouse:
