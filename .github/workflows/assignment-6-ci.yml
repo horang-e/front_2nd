@@ -73,7 +73,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: lighthouse-report
-          path: ./packages/assignment-6/lighthouse-results
+          path: packages/assignment-6/lighthouse-results
       - name: Comment Lighthouse results on PR
         uses: actions/github-script@v6
         with:
@@ -113,6 +113,11 @@ jobs:
               repo: context.repo.repo,
               body: comment
             })
+      - name: Upload Lighthouse report
+        uses: actions/upload-artifact@v3
+        with:
+          name: lighthouse-report
+          path: packages/assignment-6/lighthouse-results
 
   assign_reviewer:
     runs-on: ubuntu-latest
