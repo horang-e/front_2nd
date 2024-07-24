@@ -52,8 +52,13 @@ jobs:
   lighthouse:
     runs-on: ubuntu-latest
     steps:
-      - name: job4 구현
-        run: echo "job4의 내용을 구현해주세요"
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm install && npm install -g @lhci/cli@0.14.x
+      - run: npm run build
+      - run: lhci autorun
 
   assign_reviewer:
     runs-on: ubuntu-latest
