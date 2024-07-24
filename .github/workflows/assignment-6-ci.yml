@@ -90,7 +90,12 @@ jobs:
             console.log('Contents of current directory:', fs.readdirSync('.'));
 
             // lighthouse-results 디렉토리에서 가장 최근의 JSON 파일을 찾습니다
-            const lighthouseDir = 'packages/assignment-6/lighthouse-results';
+            const lighthouseDir = path.join('packages', 'assignment-6', 'lighthouse-results');
+            if (!fs.existsSync(lighthouseDir)) {
+             console.log('Lighthouse results directory does not exist');
+              return; 
+              }
+
             const jsonFiles = fs.readdirSync(lighthouseDir).filter(file => file.endsWith('.json'));
             const latestFile = jsonFiles.sort((a, b) => {
               return fs.statSync(path.join(lighthouseDir, b)).mtime.getTime() - 
