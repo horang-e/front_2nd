@@ -21,7 +21,9 @@ jobs:
         with:
           node-version: 20
       - name: Install dependencies
-        run: pnpm -F assignment-6 install
+        run: |
+          cd packages/assignment-6
+          pnpm install
       - name: Run tsc and build
         id: build
         run: |
@@ -55,11 +57,14 @@ jobs:
         run: pnpm -F assignment-6 install
       - name: Run eslint
         id: eslint
-        run: pnpm -F assignment-6 run lint
+        run: |
+          cd packages/assignment-6
+          pnpm run lint
       - name: Run eslint
         run: |
           echo "::group::ESLint Output"
-          pnpm -F assignment-6 run lint
+          cd packages/assignment-6
+          pnpm run lint
           echo "::endgroup::"
       - name: Comment eslint report on PR
         if: failure() && steps.eslint.outcome=='failure'
