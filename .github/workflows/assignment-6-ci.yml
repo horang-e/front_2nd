@@ -218,6 +218,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Assign random reviewer
+        if: github.event.action == 'opened'
         uses: actions/github-script@v6
         with:
           github-token: ${{secrets.TOKEN_FOR_CI}}
